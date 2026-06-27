@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-API_BASE = "http://localhost:8000"  # Change to your deployed FastAPI URL
+API_BASE = "https://note-taking-app.onrender.com"
 
 st.set_page_config(
     page_title="NoteVault",
