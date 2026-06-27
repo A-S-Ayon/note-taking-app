@@ -154,10 +154,13 @@ def api(method: str, path: str, *, json=None, auth=True):
     if auth and st.session_state.token:
         headers["Authorization"] = f"Bearer {st.session_state.token}"
     try:
-        r = requests.request(method, f"{API_BASE}{path}", json=json, headers=headers, timeout=10)
+        r = requests.request(method, f"{API_BASE}{path}", json=json, headers=headers, timeout=30)
         return r
     except requests.exceptions.ConnectionError:
-        st.error("❌ Cannot reach the API. Make sure FastAPI is running on " + API_BASE)
+        st.error("❌ Cannot reach the API. Backend may be sleeping, try again in 30 seconds.")
+        return None
+    except requests.exceptions.Timeout:
+        st.error("⏱️ Request timed out. Backend is waking up, please try again.")
         return None
 
 def fetch_notes():
@@ -197,8 +200,13 @@ def auth_page():
                     if r is None:
                         pass
                     elif r.status_code == 200:
-                        data = r.json()
+                        try:
+                            data = r.json()
+                        except Exception:
+                            st.error(f"Backend returned invalid response (HTTP {r.status_code}). It may be waking up — wait 30 seconds and try again.")
+                            st.stop()
                         st.session_state.token = data["access_token"]
+                        
                         st.session_state.user  = data["user"]
                         fetch_notes()
                         st.rerun()
