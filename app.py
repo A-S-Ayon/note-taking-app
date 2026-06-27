@@ -13,7 +13,7 @@ def wake_backend():
 threading.Thread(target=wake_backend, daemon=True).start()
 
 
-API_BASE = "https://note-taking-app-ks18.onrender.com/"
+API_BASE = "https://note-taking-app-ks18.onrender.com"
 
 st.set_page_config(
     page_title="NoteVault",
