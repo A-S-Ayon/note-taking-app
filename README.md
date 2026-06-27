@@ -1,46 +1,96 @@
-# 📓 NoteVault — FastAPI + Supabase + Streamlit
+# 📓 NoteVault
 
-A full-stack note-taking web app with JWT authentication and per-user private notes.
+A full-stack note-taking web app with JWT authentication and per-user private notes — built with FastAPI, Supabase, and Streamlit.
 
----
-
-## Stack
-
-| Layer    | Tech                         |
-|----------|------------------------------|
-| Backend  | FastAPI + python-jose (JWT)  |
-| Database | Supabase (PostgreSQL)        |
-| Frontend | Streamlit                    |
-| Auth     | bcrypt passwords + JWT       |
+![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.115-green?logo=fastapi)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.40-red?logo=streamlit)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?logo=supabase)
 
 ---
 
-## Project Structure
+## ✨ Features
+
+- **User Authentication** — Register and login with email & password
+- **JWT Security** — Stateless token-based auth, tokens expire after 24 hours
+- **Password Hashing** — bcrypt hashing, passwords never stored in plain text
+- **Private Notes** — Each user only sees their own notes
+- **Full CRUD** — Create, read, update, and delete notes
+- **Live Search** — Filter notes instantly from the sidebar
+- **Dark UI** — Clean dark theme built with custom Streamlit CSS
+- **REST API** — FastAPI backend with auto-generated Swagger docs
+
+---
+
+## 🏗️ Tech Stack
+
+| Layer      | Technology                        |
+|------------|-----------------------------------|
+| Frontend   | Streamlit                         |
+| Backend    | FastAPI                           |
+| Database   | Supabase (PostgreSQL)             |
+| Auth       | JWT (python-jose) + bcrypt        |
+| Hosting    | Streamlit Cloud + Render          |
+
+---
+
+## 📁 Project Structure
 
 ```
-notetaking-app/
-├── main.py          # FastAPI backend (auth + notes CRUD)
+note-taking-app/
+├── main.py          # FastAPI backend — auth + notes CRUD
 ├── app.py           # Streamlit frontend
-├── schema.sql       # Supabase tables setup
-├── requirements.txt
-└── .env.example     # Copy to .env and fill in your values
+├── schema.sql       # Supabase database setup
+├── requirements.txt # Python dependencies
+├── .env.example     # Environment variable template
+└── README.md
 ```
 
 ---
 
-## Setup (step by step)
+## 🚀 Local Setup
 
-### 1. Create a Supabase project
-1. Go to [supabase.com](https://supabase.com) → New Project
-2. Open **SQL Editor** → paste the contents of `schema.sql` → Run
+### 1. Clone the repo
+
+```bash
+git clone https://github.com/A-S-Ayon/note-taking-app.git
+cd note-taking-app
+```
+
+### 2. Create virtual environment
+
+```bash
+uv venv
+.venv\Scripts\activate       # Windows
+# source .venv/bin/activate  # Mac/Linux
+```
+
+### 3. Install dependencies
+
+```bash
+uv pip install -r requirements.txt
+```
+
+### 4. Set up Supabase
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Go to **SQL Editor** and run the contents of `schema.sql`
 3. Go to **Project Settings → API** and copy:
-   - **Project URL** → `SUPABASE_URL`
-   - **service_role** secret key → `SUPABASE_KEY` ⚠️ (NOT the anon key)
+   - **Project URL**
+   - **service_role** secret key (not the anon key)
 
-### 2. Configure environment
+### 5. Configure environment variables
+
 ```bash
 cp .env.example .env
-# Edit .env with your Supabase URL, service_role key, and a random JWT secret
+```
+
+Edit `.env`:
+
+```env
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_KEY=your-service-role-secret-key
+JWT_SECRET=your-random-secret-string
 ```
 
 Generate a JWT secret:
@@ -48,56 +98,75 @@ Generate a JWT secret:
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-### 3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
+### 6. Run the app
 
-### 4. Run the FastAPI backend
+**Terminal 1 — FastAPI backend:**
 ```bash
 uvicorn main:app --reload --port 8000
 ```
-- API docs: http://localhost:8000/docs
-- Health check: http://localhost:8000
 
-### 5. Run the Streamlit frontend
-In a **separate terminal**:
+**Terminal 2 — Streamlit frontend:**
 ```bash
 streamlit run app.py
 ```
-- App: http://localhost:8501
+
+- Frontend: http://localhost:8501
+- API docs: http://localhost:8000/docs
 
 ---
 
-## API Endpoints
+## 🌐 API Endpoints
 
-| Method | Path                | Auth | Description          |
-|--------|---------------------|------|----------------------|
-| POST   | /auth/register      | ❌   | Create account       |
-| POST   | /auth/login         | ❌   | Login, get JWT       |
-| GET    | /auth/me            | ✅   | Get current user     |
-| GET    | /notes              | ✅   | List all your notes  |
-| POST   | /notes              | ✅   | Create a note        |
-| GET    | /notes/{id}         | ✅   | Get one note         |
-| PUT    | /notes/{id}         | ✅   | Update a note        |
-| DELETE | /notes/{id}         | ✅   | Delete a note        |
-
----
-
-## Notes on Security
-- Passwords are hashed with **bcrypt** (never stored plain)
-- JWTs expire after **24 hours**
-- The `service_role` key is only used server-side in FastAPI — never expose it to the frontend
-- Keep `.env` in `.gitignore`
+| Method | Endpoint          | Auth | Description         |
+|--------|-------------------|------|---------------------|
+| POST   | /auth/register    | ❌   | Create account      |
+| POST   | /auth/login       | ❌   | Login, get JWT      |
+| GET    | /auth/me          | ✅   | Get current user    |
+| GET    | /notes            | ✅   | List all notes      |
+| POST   | /notes            | ✅   | Create a note       |
+| GET    | /notes/{id}       | ✅   | Get one note        |
+| PUT    | /notes/{id}       | ✅   | Update a note       |
+| DELETE | /notes/{id}       | ✅   | Delete a note       |
 
 ---
 
-## Deployment Tips
+## ☁️ Deployment
 
-| Service | What to deploy |
-|---------|---------------|
-| [Render](https://render.com) | FastAPI backend (free tier) |
-| [Streamlit Cloud](https://streamlit.io/cloud) | Streamlit frontend (free) |
-| [Railway](https://railway.app) | FastAPI alternative |
+| Service                                        | Purpose          | Cost |
+|------------------------------------------------|------------------|------|
+| [Render](https://render.com)                   | FastAPI backend  | Free |
+| [Streamlit Cloud](https://share.streamlit.io)  | Frontend         | Free |
+| [Supabase](https://supabase.com)               | Database         | Free |
 
-For Streamlit Cloud, set `API_BASE` in `app.py` to your deployed FastAPI URL, and add your env vars as secrets.
+### Deploy FastAPI on Render
+
+1. New Web Service → connect GitHub repo
+2. Set build and start commands:
+```
+Build:  pip install -r requirements.txt
+Start:  uvicorn main:app --host 0.0.0.0 --port $PORT
+```
+3. Add environment variables (`SUPABASE_URL`, `SUPABASE_KEY`, `JWT_SECRET`)
+
+### Deploy Frontend on Streamlit Cloud
+
+1. Go to [share.streamlit.io](https://share.streamlit.io) → New app
+2. Connect GitHub repo, set main file to `app.py`
+3. Deploy
+
+> **Note:** Update `API_BASE` in `app.py` to your Render URL before deploying the frontend.
+
+---
+
+## 🔒 Security Notes
+
+- Passwords hashed with **bcrypt** — never stored in plain text
+- JWT tokens expire after **24 hours**
+- `service_role` key used **server-side only** — never exposed to frontend
+- `.env` is gitignored — never commit secrets
+
+---
+
+## 📄 License
+
+MIT License — free to use and modify.
