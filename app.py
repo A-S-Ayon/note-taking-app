@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 from datetime import datetime
 
-API_BASE = "https://note-taking-app.onrender.com"
+API_BASE = "https://note-taking-app-ks18.onrender.com/"
 
 st.set_page_config(
     page_title="NoteVault",
