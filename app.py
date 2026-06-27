@@ -1,6 +1,17 @@
 import streamlit as st
 import requests
 from datetime import datetime
+import threading
+
+def wake_backend():
+    try:
+        requests.get(f"{API_BASE}/", timeout=10)
+    except Exception:
+        pass
+
+# Ping backend in background so it wakes up
+threading.Thread(target=wake_backend, daemon=True).start()
+
 
 API_BASE = "https://note-taking-app-ks18.onrender.com/"
 
